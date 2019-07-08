@@ -1,0 +1,4 @@
+# Handler file
+
+- name: restart apache2
+  command: sudo service apache2 restart
