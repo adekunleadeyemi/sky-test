@@ -1,4 +1,9 @@
-# Handler file
+# This is to restart apache in the environment
 
-- name: restart apache2
-  command: sudo service apache2 restart
+#- name: restart apache2
+#  command: sudo service apache2 restart
+
+ - name: restart apache2
+   service:
+     name: apache2
+     state: restarted

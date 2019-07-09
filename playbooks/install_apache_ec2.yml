@@ -1,0 +1,9 @@
+# This is to install apache in the already ec2 instance
+
+- hosts: ec2
+  gather_facts: no
+  become: yes
+  become_user: root
+  remote_user: ubuntu
+  roles:
+   - install_apache

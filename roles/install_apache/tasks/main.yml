@@ -1,32 +1,64 @@
 ---
-- name: This sets up an httpd webserver
-  hosts: apache
-  sudo: yes
-  tasks:
+# This sets up an httpd webserver
+  - name: Copy file with owner and permissions
+    copy:
+      src: /home/skynkunle/git/sky-test/sky.html
+      dest: /opt/sky.html
+      owner: ubuntu
+      group: ubuntu
+      mode: '0755'
+
   - name: Install apache2
-    apt: name=apache2 update_cache=yes state=latest
+    apt: 
+      name: apache2
+      update_cache: yes
+      state: latest
+#    become: yes
+#    become_user: root
     
   - name: enabled mod_rewrite
-    apache2_module: name=rewrite state=present
+#    become: yes
+#    become_user: root
+    apache2_module:
+       name: rewrite
+       force: true
+       state: present
     notify:
       - restart apache2
       
-      - name: apache2 listen on port 8080
-        lineinfile: dest=/etc/apache2/ports.conf regexp="^Listen 80" line="Listen 8080" state=present
-        notify:
-         - restart apache2
+  - name: apache2 listen on port 8080
+#    become: yes
+#    become_user: root
+    lineinfile:
+       dest: "/etc/apache2/ports.conf"
+       regexp: "^Listen 80"
+       line: "Listen 8080"
+       state: present
+    notify:
+      - restart apache2
 
-      - name: apache2 virtualhost on port 8080
-        lineinfile: dest=/etc/apache2/sites-available/000-default.conf regexp="^<VirtualHost \*:80>" line="<VirtualHost *:8080>" state=present
-        notify:
-          - restart apache2
+  - name: apache2 virtualhost on port 8080
+    lineinfile:
+       dest: "/etc/apache2/sites-available/000-default.conf"
+       regexp: "^<VirtualHost \\*:80>"
+       line: "<VirtualHost *:8080>"
+       state: present
+    notify:
+      - restart apache2
+
+  - name: apache2 virtualhost redirect from port 443
+    lineinfile: 
+       dest: "/etc/apache2/sites-available/000-default.conf"
+       regexp: "^<VirtualHost \\*:443>"
+#       redirect: "^DocumentRoot/opt/sky.html"
+       line: "<VirtualHost *:8080>"
+       state: present
           
-      - name: apache2 default DocumentRoot
-        lineinfile: dest=/etc/apache2/sites-available/000-default.conf regexp="^DocumentRoot /var/www/html" line="DocumentRoot /opt/hello-world.html" state=present
-        notify:
-          - restart apache2
-  handlers:
-    - name: restart apache2
-      service: name=apache2 state=restarted
-    
-    
+  - name: apache2 default DocumentRoot
+    lineinfile:
+       dest: "/etc/apache2/sites-available/000-default.conf"
+       regexp: "^DocumentRoot /var/www/html" 
+       line: "DocumentRoot /opt/sky.html"
+       state: present
+    notify:
+      - restart apache2

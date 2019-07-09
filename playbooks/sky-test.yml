@@ -3,5 +3,10 @@
 - hosts: localhost 
   gather_facts: no
   roles:
-     - ec2_security_groups
-     - set_ec2_instance 
+   - ec2_security_groups
+   - set_ec2_instance
+
+#- hosts: tag_Name_webserver
+#  gather_facts: no
+#  roles:
+#   - install_apache

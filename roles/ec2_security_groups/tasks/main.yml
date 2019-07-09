@@ -2,12 +2,6 @@
   ec2_group:
     name: "webserver"
     description: sg with rule descriptions
-    vpc_id: vpc-07d6f761
-#    profile: "{{ aws_profile }}"
-    region: eu-west-1
-    rules:
-      - proto: tcp
-        ports:
-        - 80
-        cidr_ip: 0.0.0.0/0
-        rule_desc: allow all on port 80
+    vpc_id: '{{ ec2_vpc }}'
+    region: '{{ ec2_region }}'
+    rules: '{{ rule_list }}'
