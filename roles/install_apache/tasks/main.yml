@@ -13,12 +13,8 @@
       name: apache2
       update_cache: yes
       state: latest
-#    become: yes
-#    become_user: root
     
   - name: enabled mod_rewrite
-#    become: yes
-#    become_user: root
     apache2_module:
        name: rewrite
        force: true
@@ -27,8 +23,6 @@
       - restart apache2
       
   - name: apache2 listen on port 8080
-#    become: yes
-#    become_user: root
     lineinfile:
        dest: "/etc/apache2/ports.conf"
        regexp: "^Listen 80"
